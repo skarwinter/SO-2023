@@ -12,7 +12,7 @@ int main(){
     scanf("%f", &nota3);
 
     promedio = (nota1*0.4 + nota2*0.3 + nota3*0.3)/3;
-    printf("El promedio es: %.2f\n", promedio);   
+    printf("El promedio es: %.3f\n", promedio);   
 
     return 0;
 }
