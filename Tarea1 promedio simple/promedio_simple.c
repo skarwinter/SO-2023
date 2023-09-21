@@ -11,7 +11,7 @@ int main(void){
     printf("Ingrese la tercera nota: ");
     scanf("%f", &nota3);
 
-    promedio = (nota1*0.4 + nota2*0.3 + nota3*0.3)/3;
+    promedio = (nota1*0.4 + nota2*0.3 + nota3*0.3);
     printf("El promedio es: %.3f\n", promedio);   
 
     return 0;
