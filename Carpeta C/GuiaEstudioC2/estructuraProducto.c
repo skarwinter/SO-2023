@@ -13,7 +13,7 @@ int main() {
     printf("Ingrese el código del producto 1: ");
     scanf("%d", &producto1.codigo);
     printf("Ingrese la descripción del producto 1: ");
-    scanf(" %[^\n]s", producto1.descripcion);  // ssamos  %[^\n]s para leer una línea completa
+    scanf(" %[^\n]s", producto1.descripcion);  //ussamos  %[^\n]s para leer una línea completa
     printf("Ingrese el precio del producto 1: ");
     scanf("%f", &producto1.precio);
 
@@ -25,7 +25,7 @@ int main() {
     printf("Ingrese el precio del producto 2: ");
     scanf("%f", &producto2.precio);
 
-    // Comparar los precios y encontrar el producto con mayor precio
+    //comparar los precios y encontrar el producto con mayor precio
     if (producto1.precio > producto2.precio) {
         printf("El producto con mayor precio es: %s\n", producto1.descripcion);
     } else if (producto2.precio > producto1.precio) {
