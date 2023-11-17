@@ -17,19 +17,19 @@ void *productor(void *arg) {
     int id = *((int *)arg);
 
     for (int i = 0; i < 5; ++i) {
-        // Generar un producto
-        int producto = rand() % 100;
+        //generar producto
+        int producto = rand() % 1000 % 9999;
 
-        // Esperar por espacio disponible en el almacén
+        //esperar semaforo
         sem_wait(&espacio_disponible);
         sem_wait(&almacen_mutex);
 
-        // Colocar el producto en el almacén
+        //colocar producto
         almacen[indice_produccion] = producto;
         printf("Productor %d genero el producto %d en la posicion %d\n", id, producto, indice_produccion);
         indice_produccion = (indice_produccion + 1) % N;
 
-        // Liberar el mutex y notificar que hay un producto disponible
+        //liberar semaforo
         sem_post(&almacen_mutex);
         sem_post(&productos_disponibles);
     }
@@ -41,16 +41,16 @@ void *consumidor(void *arg) {
     int id = *((int *)arg);
 
     for (int i = 0; i < 5; ++i) {
-        // Esperar por productos disponibles en el almacén
+        //esperar producto
         sem_wait(&productos_disponibles);
         sem_wait(&almacen_mutex);
 
-        // Tomar un producto del almacén
+        //tomar producto
         int producto = almacen[indice_consumo];
         printf("Consumidor %d tomo el producto %d de la posicion %d\n", id, producto, indice_consumo);
         indice_consumo = (indice_consumo + 1) % N;
 
-        // Liberar el mutex y notificar que hay espacio disponible
+        //liberar mutex
         sem_post(&almacen_mutex);
         sem_post(&espacio_disponible);
     }
@@ -62,34 +62,34 @@ int main() {
     pthread_t productores[M], consumidores[K];
     int ids_productores[M], ids_consumidores[K];
 
-    // Inicializar semáforos
+    //inicializar semaforos
     sem_init(&almacen_mutex, 0, 1);
     sem_init(&espacio_disponible, 0, N);
     sem_init(&productos_disponibles, 0, 0);
 
-    // Crear hilos de productores
+    //crear hilos prod
     for (int i = 0; i < M; ++i) {
         ids_productores[i] = i + 1;
         pthread_create(&productores[i], NULL, productor, (void *)&ids_productores[i]);
     }
 
-    // Crear hilos de consumidores
+    //crera hilos consum
     for (int i = 0; i < K; ++i) {
         ids_consumidores[i] = i + 1;
         pthread_create(&consumidores[i], NULL, consumidor, (void *)&ids_consumidores[i]);
     }
 
-    // Esperar a que los hilos de productores terminen
+    //esperar hiulos prod
     for (int i = 0; i < M; ++i) {
         pthread_join(productores[i], NULL);
     }
 
-    // Esperar a que los hilos de consumidores terminen
+    //esperar hilos consum
     for (int i = 0; i < K; ++i) {
         pthread_join(consumidores[i], NULL);
     }
 
-    // Destruir semáforos
+    //destruir semaforos(no molvidr)
     sem_destroy(&almacen_mutex);
     sem_destroy(&espacio_disponible);
     sem_destroy(&productos_disponibles);
