@@ -4,22 +4,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-sem_t sem_peatones, sem_viniculos, sem_mutex;
+sem_t sem_peatones, sem_viniculos;
 int num_peatones, num_viniculos;
 
 void *peatones(void *arg) {
   int id = *((int *)arg);
 
-  sem_wait(&sem_mutex); // Espera al semáforo de mutex antes de entrar en la
-                        // región crítica
-  sem_post(&sem_mutex); // Libera el semáforo de mutex después de salir de la
-                        // región crítica
-
   sem_wait(&sem_peatones);
   printf("----SEMAFORO P VERDE----\n");
   printf("El peaton %d cruzo el semaforo\n", id);
-  sleep(1);
   printf("---SEMAFORO P ROJO----\n");
+  sleep(1);
   sem_post(&sem_peatones);
 
   pthread_exit(NULL);
@@ -31,8 +26,8 @@ void *vehiculos(void *arg) {
   sem_wait(&sem_viniculos);
   printf("----SEMAFORO V VERDE----\n");
   printf("El vehiculo %d cruzo el semaforo\n", id);
-  sleep(2);
   printf("---SEMAFORO V ROJO----\n");
+  sleep(2);
   sem_post(&sem_viniculos);
 
   pthread_exit(NULL);
@@ -55,7 +50,6 @@ int main() {
 
   sem_init(&sem_peatones, 0, 1);
   sem_init(&sem_viniculos, 0, num_viniculos);
-  sem_init(&sem_mutex, 0, 1); // Inicializa el semáforo de mutex
 
   for (int i = 0; i < num_peatones; ++i) {
     ids_peatones[i] = i + 1;
@@ -77,7 +71,6 @@ int main() {
 
   sem_destroy(&sem_peatones);
   sem_destroy(&sem_viniculos);
-  sem_destroy(&sem_mutex);
 
   return 0;
 }
